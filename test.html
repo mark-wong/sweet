@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <title>Self test</title>
+    <script type="text/javascript" src="sweet.js"></script>
+</head>
+<body>
+    <div id="tpl">
+        <pre id="tpl_pre"></pre>
+    </div>
+    <div id="text"></div>
+</body>
+<script type="text/javascript">
+    function bingo(str) {
+        return str;
+    }
+    var str = ['<[ foreach($data as data){ ]><p>name: <[=name]></p>',
+        '<p>age: <[=age]></p>',
+        '<p>sex: <[=sex]></p>',
+        '<p>fav:</p><ul>',
+        '<[var i, l; for(i=0,l=fav.length; i < l; i++){]>',
+            '<li><[=fav[i]]></li>',
+        '<[}]>',
+        '</ul>',
+        '<p>language:</p><ul>',
+        '<[$util.print(this.shit()); foreach(language){]>',
+            '<li><[=$index + 1]> - ',
+            '<span style="color:<[level > 1 ?]>red <[:]> black <[;]>">',
+            '<[=name]>: <[$util.print(level)]></span>',
+            '</li>',
+        '<[}]>',
+        '</ul>',
+        '<[if(like){]><span style="color: red">Yes, we like it!</span>',
+        '<[}else{]><span style="color: green">No, we don\'t like it!</span><[}]><p>****** end ******</p>',
+        '<[}]>'].join(''),
+        sweetTpl = new Sweet(str),
+        data = [{
+            name: "mark one",
+            age: 28,
+            sex: "male",
+            fav: ["game", "swim", "programming"],
+            language: [{
+                name: "C#",
+                level: 2
+            }, {
+                name: "javascript",
+                level: 3
+            }, {
+                name: "java",
+                level: 2
+            }, {
+                name: "python",
+                level: 1
+            }],
+            like: true
+        }, {
+            name: "mark two",
+            age: 28,
+            sex: "male",
+            fav: ["reading", "pingpong", "sleep"],
+            language: [{
+                name: "C#",
+                level: 2
+            }, {
+                name: "javascript",
+                level: 3
+            }, {
+                name: " ",
+                level: 2
+            }, {
+                name: "python",
+                level: 1
+            }],
+            like: false
+        }],
+        html = sweetTpl.applyData(data, {
+            shit: function() {return "shit"}
+        });
+    document.getElementById("text").innerHTML = html;
+</script>
+</html>

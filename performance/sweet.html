@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Sweet test</title>
+    <script type="text/javascript" src="../sweet.js"></script>
+</head>
+<body>
+    <div id="test"></div>
+</body>
+<script type="text/javascript">
+    Sweet.setDelimiters("<#...#>");
+    var data = {
+            name: "mark one",
+            age: 28,
+            sex: "male",
+            fav: ["game", "swim", "programming"],
+            language: [{
+                name: "C#",
+                level: 2
+            }, {
+                name: "javascript",
+                level: 3
+            }, {
+                name: "java",
+                level: 2
+            }, {
+                name: "python",
+                level: 1
+            }],
+            like: true
+        };
+    function test() {
+        var strSweet = ['<p>name: <#=name#></p>',
+                '<p>age: <#=age#></p>',
+                '<p>sex: <#=sex#></p>',
+                '<p>fav:</p><ul>',
+                '<#var i, l; for(i=0,l=fav.length; i < l; i++){#>',
+                    '<li><#=fav[i]#></li>',
+                '<#}#>',
+                '</ul>',
+                '<p>language:</p><ul>',
+                '<#foreach(language as lang){#>',
+                    '<li><#=$index + 1#> - ',
+                    '<span style="color:<#=level > 1 ? "red":"black" #>">',
+                    '<#=name#>: <#=level#></span>',
+                    '</li>',
+                '<#}#>',
+                '</ul>',
+                '<#if(like){#><span style="color: red">Yes, we like it!</span>',
+                '<#}else{#><span style="color: green">No, we don\'t like it!</span><#}#>'].join(''),
+            sweetTpl, startTime, endTime, loopTime = 1000, i, compileTime, applyTime;
+
+        // compile time
+        startTime = new Date();
+        for (i = 0; i < loopTime; i++) {
+            sweetTpl = new Sweet(strSweet);
+        }
+        endTime = new Date();
+        compileTime = endTime - startTime + "ms";
+
+        // apply time
+        startTime = new Date();
+        for (i = 0; i < loopTime; i++) {
+            sweetTpl.applyData(data);
+        }
+        endTime = new Date();
+        applyTime = endTime - startTime + "ms";
+        return {compileTime: compileTime, applyTime: applyTime};
+    }
+
+    document.getElementById("test").test = test;
+</script>
+</html>

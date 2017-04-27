@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>TrimPath JST test</title>
+    <script type="text/javascript" src="trimpath-template-1.0.38.js"></script>
+</head>
+<body>
+    <div class="hideme"></div>
+</body>
+<script type="text/javascript">
+    var data = {
+            name: "mark one",
+            age: 28,
+            sex: "male",
+            fav: ["game", "swim", "programming"],
+            language: [{
+                name: "C#",
+                level: 2
+            }, {
+                name: "javascript",
+                level: 3
+            }, {
+                name: "java",
+                level: 2
+            }, {
+                name: "python",
+                level: 1
+            }],
+            like: true
+        };
+
+    function test() {
+        var str = ['<p>name: ${name}</p>',
+                '<p>age: ${age}</p>',
+                '<p>sex: ${sex}</p>',
+                '<p>fav:</p><ul>',
+                '{for f in fav}',
+                    '<li>${f}</li>',
+                '{/for}',
+                '</ul>',
+                '<p>language:</p><ul>',
+                '{for lang in language}',
+                    '<li>${parseInt(lang_index) + 1} - ',
+                    '<span style="color:{if lang.level > 1} red {else} black {/if}">',
+                    '${lang.name}: ${lang.level}</span>',
+                    '</li>',
+                '{/for}',
+                '</ul>',
+                '{if like}<span style="color: red">Yes, we like it!</span>',
+                '{else}<span style="color: green">No, we don\'t like it!</span>{/if}'].join(''),
+            startTime, endTime, loopTime = 1000, tpl, i, compileTime, applyTime;
+        // compile time
+        startTime = new Date();
+        for (i = 0; i < loopTime; i++) {
+            tpl = TrimPath.parseTemplate(str);
+        }
+        endTime = new Date();
+        compileTime = endTime - startTime + "ms";
+
+        // apply time
+        startTime = new Date();
+        for (i = 0; i < loopTime; i++) {
+            tpl.process(data);
+        }
+        endTime = new Date();
+        applyTime = endTime - startTime + "ms";
+        return {compileTime: compileTime, applyTime: applyTime};
+    }
+</script>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>jTemplate test</title>
+    <script type="text/javascript" src="jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="jquery-jtemplates_uncompressed.js"></script>
+</head>
+<body>
+    <div class="hideme"></div>
+</body>
+<script type="text/javascript">
+    var data = {
+            name: "mark one",
+            age: 28,
+            sex: "male",
+            fav: ["game", "swim", "programming"],
+            language: [{
+                name: "C#",
+                level: 2
+            }, {
+                name: "javascript",
+                level: 3
+            }, {
+                name: "java",
+                level: 2
+            }, {
+                name: "python",
+                level: 1
+            }],
+            like: true
+        };
+
+    function test() {
+        var str = ['<p>name: {$T.name}</p>',
+                '<p>age: {$T.age}</p>',
+                '<p>sex: {$T.sex}</p>',
+                '<p>fav:</p><ul>',
+                '{#for index = 0 to $T.fav.length}',
+                    '<li>{$T.fav[$T.index]}</li>',
+                '{#/for}',
+                '</ul>',
+                '<p>language:</p><ul>',
+                '{#foreach $T.language as lang}',
+                    '<li>{$T.lang$index+1} - ',
+                    '<span style="color:{#if $T.lang.level > 1} red {#else} black {#/if}">',
+                    '{$T.lang.name}: {$T.lang.level}</span>',
+                    '</li>',
+                '{#/for}',
+                '</ul>',
+                '{#if $T.like}<span style="color: red">Yes, we like it!</span>',
+                '{#else}<span style="color: green">No, we don\'t like it!</span>{#/if}'].join(''),
+            startTime, endTime, loopTime = 1000, i, compileTime, applyTime;
+        // compile time
+        startTime = new Date();
+        for (i = 0; i < loopTime; i++) {
+            $(".hideme").setTemplate(str);
+        }
+        endTime = new Date();
+        compileTime = endTime - startTime + "ms";
+
+        // apply time
+        var el = $(".hideme")[0],
+            tpl = $.getTemplate(el);
+        startTime = new Date();
+        for (i = 0; i < loopTime; i++) {
+            tpl.get(data, {}, el, 0);
+        }
+        endTime = new Date();
+        applyTime = endTime - startTime + "ms";
+        return {compileTime: compileTime, applyTime: applyTime};
+    }
+</script>
+</html>

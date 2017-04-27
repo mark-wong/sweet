@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <title>Performance test</title>
+    <script type="text/javascript" src="sweet.js"></script>
+    <style type="text/css">
+        .test-window {
+            border-bottom: 1px solid #999;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-window">
+        <h3>Compile time</h3>
+        <span id="compile"></span>
+    </div>
+    <div class="test-window">
+        <h3>Apply time</h3>
+        <span id="apply"></span>
+    </div>
+</body>
+<script type="text/javascript">
+    var str = ['<p>name: <#=name#></p>',
+        '<p>age: <#=age#></p>',
+        '<p>sex: <#=sex#></p>',
+        '<p>fav:</p><ul>',
+        '<#var i, l; for(i=0,l=fav.length; i < l; i++){#>',
+            '<li><#=fav[i]#></li>',
+        '<#}#>',
+        '</ul>',
+        '<p>language:</p><ul>',
+        '<#foreach(language){#>',
+            '<li><#=$index + 1#> - ',
+            '<span style="color:<#=level > 1 ? "red":"black" #>">',
+            '<#=name#>: <#$util.print(level)#></span>',
+            '</li>',
+        '<#}#>',
+        '</ul>',
+        '<#if(like){#><span style="color: red">Yes, we like it!</span>',
+        '<#}else{#><span style="color: green">No, we don\'t like it!</span><#}#>'].join(''),
+        data = {
+            name: "mark one",
+            age: 28,
+            sex: "male",
+            fav: ["game", "swim", "programming"],
+            language: [{
+                name: "C#",
+                level: 2
+            }, {
+                name: "javascript",
+                level: 3
+            }, {
+                name: "java",
+                level: 2
+            }, {
+                name: "python",
+                level: 1
+            }],
+            like: true
+        }, sweetTpl, startTime, endTime, loopTime = 1000, i,
+        compileSpan = document.getElementById("compile"),
+        applySpan = document.getElementById("apply");
+    startTime = new Date();
+    for (i = 0; i < loopTime; i++) {
+        sweetTpl = new Sweet(str);
+    }
+    endTime = new Date();
+    compileSpan.innerHTML = endTime - startTime + "ms";
+    startTime = new Date();
+    for (i = 0; i < loopTime; i++) {
+        sweetTpl.applyData(data);
+    }
+    endTime = new Date();
+    applySpan.innerHTML = endTime - startTime + "ms";
+</script>
+</html>
